@@ -17,3 +17,19 @@ Project details
 		- twitter-process.py (Mongo -> Postgres)
 	- Serving
 		- serving.py
+
+- Packages to install
+	- Anaconda
+	- Kafka
+	- MongoDB
+	- PostgreSQL
+	- Python packages
+		- Tweepy
+		- Kafka-python
+		- Pymongo		
+		- psycopg2
+
+- Directories
+	- Kafka: /data/kafka/
+	- MongoDB: /data/mongo/
+	- PostgreSQL: /data/pgsql/
