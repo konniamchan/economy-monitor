@@ -8,6 +8,7 @@ Project details
 	- Setup
 		- setup.sh
 		- start-servers.sh
+		- stop-servers.sh
 	- Ingestion
 		- twitter-ingest.py (Streaming Twitter -> Kafka)
 		- twitter-write.py (Kafka -> Mongo)
