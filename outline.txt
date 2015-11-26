@@ -1,0 +1,19 @@
+Project details
+
+- Ports
+	- MongoDB: 27017, 28017
+	- PostgreSQL: 5432
+
+- Scripts
+	- Setup
+		- setup.sh
+		- start-servers.sh
+	- Ingestion
+		- twitter-ingest.py (Streaming Twitter -> Kafka)
+		- twitter-write.py (Kafka -> Mongo)
+		- yahoo-ingest.py (Yahoo -> Postgres)
+		- fred-ingest.py (FRED -> Postgres)
+	- Processing
+		- twitter-process.py (Mongo -> Postgres)
+	- Serving
+		- serving.py
