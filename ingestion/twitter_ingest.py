@@ -12,7 +12,7 @@ producer = SimpleProducer(kafka)
 # Twitter streaming -> Kafka
 class StdOutListener(StreamListener):
     """ A listener handles tweets that are received from the stream.
-    This is a basic listener that just prints received tweets to stdout.
+    Send stream to Kafka.
     """
     def on_data(self, raw_data):
         try:
