@@ -1,8 +1,9 @@
-from kafka import SimpleProducer, KafkaClient
 from __future__ import absolute_import, print_function
+from kafka import SimpleProducer, KafkaClient
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+from twitter_credentials import *
 
 # Kafka: send messages synchronously
 kafka = KafkaClient('localhost:9092')
@@ -15,7 +16,7 @@ class StdOutListener(StreamListener):
     """
     def on_data(self, raw_data):
         try:
-            producer.send_messages('twitter', raw_data.strip())
+            producer.send_messages(b'twitter', raw_data.strip().encode('utf-8'))
             return(True)
         except Exception, e:
             # Catch any unicode errors while printing to console
