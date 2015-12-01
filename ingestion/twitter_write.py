@@ -1,5 +1,6 @@
 from kafka import KafkaConsumer
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 import simplejson
 
 # Kafka consumer
@@ -15,11 +16,15 @@ deleted_db = db["deleted"]
 for message in consumer:
     # message value is raw byte string -- decode if necessary!
     # e.g., for unicode: `message.value.decode('utf-8')`
-    tweet = simplejson.load(message.value)
+    tweet = simplejson.loads(message.value)
     if 'delete' in tweet:
         tweet['_id'] = tweet['delete']['status']['id_str']
         del tweet['delete']['status']['id_str']
-        deleted_db.insert_one(tweet)
+        try:
+            deleted_db.insert_one(tweet)
+        # Catch Duplicate delete messages
+        except DuplicateKeyError:
+            pass
     
     elif 'lang' in tweet:
         if tweet['lang'] == 'en':
