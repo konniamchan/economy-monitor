@@ -11,6 +11,7 @@ client = MongoClient()
 db = client["w205"]
 tweets_db = db["twitter"]
 deleted_db = db["deleted"]
+print ("Started writing to Mongo...")
 
 # Collection
 for message in consumer:
@@ -22,7 +23,7 @@ for message in consumer:
         del tweet['delete']['status']['id_str']
         try:
             deleted_db.insert_one(tweet)
-        # Catch Duplicate delete messages
+        # Catch duplicate delete messages
         except DuplicateKeyError:
             pass
     
@@ -30,6 +31,10 @@ for message in consumer:
         if tweet['lang'] == 'en':
             tweet['_id'] = tweet['id_str']
             del tweet['id_str']
-            tweets_db.insert_one(tweet)
+            # Catch duplicate tweets
+            try:
+                tweets_db.insert_one(tweet)            
+            except DuplicateKeyError:
+                pass
     else:
         pass
