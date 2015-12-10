@@ -1,0 +1,82 @@
+## Set up /data directory (as root)
+sudo yum update
+mkfs -t ext4 /dev/xvdf
+mkdir /data
+mount -t ext4 /dev/xvdf /data
+chmod a+rwx /data
+
+## PostgreSQL (as root)
+adduser postgres
+mkdir /data/pgsql
+mkdir /data/pgsql/data
+mkdir /data/pgsql/logs
+chown -R postgres /data/pgsql
+yum install postgresql postgresql-server python-devel postgresql-devel gcc
+
+## PostgreSQL (as postgres)
+pg_ctl init -D /data/pgsql/data
+Edit /data/pgsql/data/postgresql.conf:
+	Change
+	#listen_addresses = 'localhost'
+	to 
+	listen_addresses = ‘*’
+
+Edit the /data/pgsql/pg_hba.conf file:
+	Add:
+	host    all         all         0.0.0.0               md5
+
+## Start/stop server (as postgres)
+pg_ctl start -D /data/pgsql/data/ -l /data/pgsql/logs/pgsql.log
+pg_ctl stop -D /data/pgsql/data/ -l /data/pgsql/logs/pgsql.log
+
+psql
+CREATE USER w205 WITH PASSWORD 'pw';
+CREATE DATABASE w205project;
+ALTER DATABASE w205project OWNER TO w205;
+GRANT ALL ON DATABASE w205project TO w205;
+
+## Anaconda (accept the defaults, as ec2-user)
+wget https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda2-2.4.0-Linux-x86_64.sh
+bash Anaconda2-2.4.0-Linux-x86_64.sh
+
+## Mongo (as root)
+Create a /etc/yum.repos.d/mongodb-org-3.0.repo file:
+[mongodb-org-3.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/3.0/x86_64/
+gpgcheck=0
+enabled=1
+
+sudo yum install -y mongodb-org
+
+mkdir /data/mongo
+mkdir /data/mongo/data
+mkdir /data/mongo/logs
+
+Change /etc/mongod.conf:
+	logs: /data/mongo/logs/mongod.log
+	db: /data/mongo/data
+
+chown -R mongod /data/mongo
+
+Start server:
+	sudo service mongod start
+
+## Kafka (as ec2-user)
+wget http://apache.mesi.com.ar/kafka/0.8.2.1/kafka_2.10-0.8.2.1.tgz
+mv kafka_2.10-0.8.2.1.tgz kafka_2.10-0.8.2.1.tar
+tar xvf kafka_2.10-0.8.2.1.tar
+
+(as root)
+mkdir /data/kafka
+mkdir /data/kafka/data
+mkdir /data/kafka/zookeeper
+chown -R ec2-user /data/kafka
+
+Start ZK, Kafka
+	bin/zookeeper-server-start.sh config/zookeeper.properties
+	bin/kafka-server-start.sh config/server.properties
+
+## Python packages
+pip install --upgrade pip
+pip install tweepy kafka-python pymongo psycopg2
