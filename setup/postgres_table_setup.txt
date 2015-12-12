@@ -7,20 +7,21 @@
 
 #list of tweet _ids for the last hour
 CREATE TABLE last_hour_tweets (
-    timestamp DATETIME NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
     tweet_id VARCHAR(50) NOT NULL PRIMARY KEY
 );
 
 # hourly counts with keywords over last hour
 CREATE TABLE keyword_tweets_cnt (
-    timestamp DATETIME NOT NULL PRIMARY KEY,
-    kword_search VARCHAR(25) NOT NULL,
-    count INT NOT NULL    
+    timestamp TIMESTAMP NOT NULL,
+    kword_search VARCHAR(100) NOT NULL,
+    count INT NOT NULL,
+    PRIMARY KEY (timestamp, kword_search) 
 );
 
 #hourly counts for total tweets over last hour
 CREATE TABLE total_tweets (
-    timestamp DATETIME NOT NULL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL PRIMARY KEY,
     count INT NOT NULL
 );
 
