@@ -31,14 +31,12 @@ total_count = 0
 kwd_counts = dict.fromkeys(kwd_terms,0)
 
 #get tweet ids for last hour (from postgres table last_hour_tweets)
-cmd     = "SELECT tweet_id FROM last_hour_tweets WHERE " +\
-          "timestamp>='%s' AND timestamp<'%s'" %(hourAgo.isoformat(),
-                                                 nowHour.isoformat()
-                                                 )
-cur.execute(cmd)
+cur.execute("SELECT tweet_id FROM last_hour_tweets WHERE timestamp>=%s AND timestamp<%s", (hourAgo.isoformat(), nowHour.isoformat()) )
+tweets = cur.fetchall()
+conn.commit()
 
 #iterate over tweet ids ('_id')
-for twt in cur:
+for twt in tweets:
     #get tweets from mongodb and search for keyword terms
     for k in kwd_terms:
         tweet   = tweets_db.find_one({'_id':twt[0]})
@@ -49,18 +47,16 @@ for twt in cur:
     total_count += 1            
 
 #update total_tweets postgres table
-cmd = "INSERT INTO total_tweets VALUES ('%s','%d')" %(nowHour.isoformat(),
-                                                      total_count
-                                                      )
-cur.execute(cmd)
+cur.execute("INSERT INTO total_tweets VALUES (%s, %s)", (nowHour.isoformat(), total_count))
+conn.commit()
 
 #update keyword_tweets_cnt postgres table
 for key,val in kwd_counts.items():
-    cmd = "INSERT INTO keyword_tweets_cnt VALUES " +\
-          "('%s','%s','%d')" %(nowHour.isoformat(), key, val)
-    cur.execute(cmd)
+    cur.execute("INSERT INTO keyword_tweets_cnt VALUES (%s, %s, %s)", (nowHour.isoformat(), key, val))
                                                                  
 #drop old data
-cmd = "DELETE FROM last_hour_tweets WHERE timestamp<'%s'" %(hourAgo.isoformat())
-cur.execute(cmd)
+cur.execute("DELETE FROM last_hour_tweets WHERE timestamp<%s", (hourAgo.isoformat(), ))
+conn.commit()
 
+cur.close()
+conn.close()

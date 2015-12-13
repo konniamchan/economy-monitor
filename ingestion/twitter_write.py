@@ -41,9 +41,8 @@ for message in consumer:
             try:
                 #insert tweet id to postgres last_hour_tweets table
                 dtime   = dt.datetime.isoformat(dt.datetime.now())
-                cmd     = 'INSERT INTO last_hour_tweets VALUES ' +\
-                          "('%s','%s')" %(dtime,tweet['_id'])
-                cur.execute(cmd)                
+                cur.execute("INSERT INTO last_hour_tweets VALUES (%s, %s)", (dtime, tweet['_id'])
+                conn.commit()                
                 #insert data to mongo tweets_db database
                 tweets_db.insert_one(tweet)            
             except DuplicateKeyError:
