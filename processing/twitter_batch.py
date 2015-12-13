@@ -33,31 +33,26 @@ while time <= end_time:
         conn.commit()
     time = time + dt.timedelta(hours=1)
     
-Iterate through tweets to record counts
+# Iterate through tweets to record counts
 for tweet in tweets_db.find()[:50]:
     # Parse and group into hour
     created_time = dt.datetime.strptime(tweet["created_at"], '%a %b %d %H:%M:%S +0000 %Y')
     created_time = created_time.replace(minute=0,second=0,microsecond=0)
 
-    # Get total count
+    # Get and update total count
     cur.execute("SELECT count FROM total_tweets WHERE timestamp = %s", (created_time.isoformat(), ))
     total_count = cur.fetchone()
-    conn.commit()
-
-    # Update total count        
+    conn.commit()    
     cur.execute("UPDATE total_tweets SET count=%s WHERE timestamp = %s", (total_count[0]+1, created_time))
     conn.commit()
 
     # Check if tweet contains keyword
     for k in kwd_terms:
         if re.search(k, tweet['text']):
-
-            # Get current count
+            # Get and update keyword count
             cur.execute("SELECT count FROM keyword_tweets_cnt WHERE timestamp = %s AND kword_search = %s", (created_time.isoformat(), k))
             keyword_count = cur.fetchone()
-            conn.commit()
-
-            # Update keyword
+            conn.commit()            
             cur.execute("UPDATE keyword_tweets_cnt SET count=%s WHERE timestamp = %s AND kword_search = %s", (keyword_count[0]+1, created_time, k))
             conn.commit()
 
