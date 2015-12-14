@@ -74,8 +74,8 @@ mkdir /data/kafka/zookeeper
 chown -R ec2-user /data/kafka
 
 Start ZK, Kafka
-	bin/zookeeper-server-start.sh config/zookeeper.properties
-	bin/kafka-server-start.sh config/server.properties
+	bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
+	bin/kafka-server-start.sh -daemon config/server.properties
 
 ## Python packages
 pip install --upgrade pip
