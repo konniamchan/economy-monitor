@@ -77,6 +77,10 @@ Start ZK, Kafka
 	bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
 	bin/kafka-server-start.sh -daemon config/server.properties
 
+## Spark streaming
+wget http://d3kbcqa49mib13.cloudfront.net/spark-1.5.2-bin-hadoop2.4.tgz
+wget http://search.maven.org/remotecontent?filepath=org/apache/spark/spark-streaming-kafka-assembly_2.10/1.5.2/spark-streaming-kafka-assembly_2.10-1.5.2.jar
+
 ## Python packages
 pip install --upgrade pip
 pip install tweepy kafka-python pymongo psycopg2
