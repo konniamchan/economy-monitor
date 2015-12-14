@@ -16,11 +16,10 @@ cur     = conn.cursor()
 client      = pm.MongoClient()
 db          = client["w205"]
 tweets_db   = db["twitter"]
-# deleted_db  = db["deleted"]
 
 # Initialize PostgreSQL table
 start_time = dt.datetime(2015, 12, 1, 0)
-end_time = dt.datetime(2015, 12, 11, 0)
+end_time = dt.datetime(2015, 12, 15, 0)
 time = start_time
 
 while time <= end_time:
@@ -34,7 +33,7 @@ while time <= end_time:
     time = time + dt.timedelta(hours=1)
     
 # Iterate through tweets to record counts
-for tweet in tweets_db.find()[:50]:
+for tweet in tweets_db.find():
     # Parse and group into hour
     created_time = dt.datetime.strptime(tweet["created_at"], '%a %b %d %H:%M:%S +0000 %Y')
     created_time = created_time.replace(minute=0,second=0,microsecond=0)

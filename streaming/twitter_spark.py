@@ -12,7 +12,7 @@ kafka_stream = KafkaUtils.createStream(ssc, "localhost:2181", "twitter-consumer"
 
 # Ceate RDD's
 tweets_parsed = kafka_stream.map(lambda (n,x): simplejson.loads(x))
-tweets_filtered = tweets_parsed.filter (lambda x: 'text' in x)
+tweets_filtered = tweets_parsed.filter (lambda x: "lang" in x and x["lang"]=="en")
 tweets = tweets_filtered.map(lambda x: x['text'].encode('utf-8').lower())
 
 # Count keyword frequencies
