@@ -48,7 +48,7 @@ for tweet in tweets_db.find()[:50]:
 
     # Check if tweet contains keyword
     for k in kwd_terms:
-        if re.search(k, tweet['text']):
+        if re.search(k, tweet['text'].lower()):
             # Get and update keyword count
             cur.execute("SELECT count FROM keyword_tweets_cnt WHERE timestamp = %s AND kword_search = %s", (created_time.isoformat(), k))
             keyword_count = cur.fetchone()

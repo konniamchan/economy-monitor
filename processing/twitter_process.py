@@ -40,8 +40,8 @@ for twt in tweets:
     #get tweets from mongodb and search for keyword terms
     for k in kwd_terms:
         tweet   = tweets_db.find_one({'_id':twt[0]})
-        text    = tweet['text']
-        if re.search(k,text):
+        text    = tweet['text'].lower()
+        if re.search(k, text:
             #tally results
             kwd_counts[k] += 1
     total_count += 1            
