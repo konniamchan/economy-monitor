@@ -6,7 +6,7 @@ import re
 
 # Keyword terms
 kwd_terms = [r'lost +(my|his|her|your|their)? *job',
-             r'got *fired',r'unemploy(ed)?',r'lay(ed )?-?off']
+             r'got *fired',r'unemploy(ed)?',r'la(y|id)?[ -]?off']
 
 # Postgres connection
 conn    = pg.connect(user='w205',database='w205project',password='pw')
